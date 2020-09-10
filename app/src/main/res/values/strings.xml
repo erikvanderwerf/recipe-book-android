@@ -1,7 +1,5 @@
 <resources>
     <string name="app_name">Recipe Book</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="index_confirm">Perform Index</string>
     <string name="index_help">An index operation may take some time. Continue?</string>
 </resources>

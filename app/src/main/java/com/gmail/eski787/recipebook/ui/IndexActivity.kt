@@ -27,7 +27,7 @@ class IndexActivity : AppCompatActivity(), IndexConfirmInterface, IndexListInter
 
     override fun onClick(identifier: OpenRecipeIdentifier) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, IndexDetailFragment.newInstance(identifier))
+            .replace(R.id.container, IndexedItemDetailFragment.newInstance(identifier))
             .addToBackStack("details")
             .commit()
     }

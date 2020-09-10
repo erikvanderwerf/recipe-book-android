@@ -9,22 +9,22 @@ import android.view.ViewGroup
 import com.gmail.eski787.recipebook.R
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 
-class IndexDetailFragment : Fragment() {
+class IndexedItemDetailFragment : Fragment() {
     companion object {
         const val TAG = "IndexDetailFragment"
         private const val ARG_IDENTIFIER = "identifier"
 
-        fun newInstance(identifier: OpenRecipeIdentifier): IndexDetailFragment {
+        fun newInstance(identifier: OpenRecipeIdentifier): IndexedItemDetailFragment {
             val args = Bundle()
             args.putString(ARG_IDENTIFIER, identifier)
 
-            val indexDetailFragment = IndexDetailFragment()
+            val indexDetailFragment = IndexedItemDetailFragment()
             indexDetailFragment.arguments = args
             return indexDetailFragment
         }
     }
 
-    private lateinit var viewModel: IndexDetailViewModel
+    private lateinit var viewModel: IndexedItemDetailViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +35,7 @@ class IndexDetailFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        viewModel = ViewModelProviders.of(this).get(IndexDetailViewModel::class.java)
+        viewModel = ViewModelProviders.of(this).get(IndexedItemDetailViewModel::class.java)
         // TODO: Use the ViewModel
     }
 

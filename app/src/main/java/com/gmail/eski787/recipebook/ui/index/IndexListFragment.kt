@@ -49,8 +49,8 @@ class IndexListFragment : Fragment(), IndexListInterface {
         if (view !is RecyclerView) throw RuntimeException("IndexListFragment was instantiated " +
                 "with the wrong view. Got $view")
 
-        val recyclerViewAdapter = IndexedItemRecyclerViewAdapter(this)
-        val model: IndexedItemViewModel by viewModels()
+        val recyclerViewAdapter = IndexRecyclerViewAdapter(this)
+        val model: IndexViewModel by viewModels()
         model.getIndexedItems().observe(viewLifecycleOwner, {
             recyclerViewAdapter.setItems(it)
         })

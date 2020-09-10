@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
-class IndexedItemViewModel: ViewModel(), CoroutineScope {
+class IndexViewModel: ViewModel(), CoroutineScope {
     override val coroutineContext: CoroutineContext = Dispatchers.IO
 
     private val mutableIndex: MutableLiveData<List<IndexedItem>> by lazy {

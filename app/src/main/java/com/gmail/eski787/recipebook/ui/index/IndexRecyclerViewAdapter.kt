@@ -12,8 +12,8 @@ import java.util.*
 /**
  * [RecyclerView.Adapter] that can display a [IndexedItem].
  */
-class IndexedItemRecyclerViewAdapter(val fragment: IndexListInterface) :
-    RecyclerView.Adapter<IndexedItemRecyclerViewAdapter.IndexedItemViewHolder>() {
+class IndexRecyclerViewAdapter(val fragment: IndexListInterface) :
+    RecyclerView.Adapter<IndexRecyclerViewAdapter.IndexedItemViewHolder>() {
 
     private var items: List<IndexedItem> = Collections.emptyList()
 

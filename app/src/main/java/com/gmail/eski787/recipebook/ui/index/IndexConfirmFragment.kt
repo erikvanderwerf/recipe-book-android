@@ -7,13 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import com.gmail.eski787.recipebook.ui.IndexActivity
 import com.gmail.eski787.recipebook.R
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-//private const val ARG_PARAM1 = "param1"
-//private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -21,11 +18,25 @@ import com.gmail.eski787.recipebook.R
  * create an instance of this fragment.
  */
 class IndexConfirmFragment : Fragment() {
-    private var indexActivity: IndexActivity? = null
+    companion object {
+        const val TAG = "IndexConfirmFragment"
+        private const val ARG_ERROR_STRING = "error_string"
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+        @JvmStatic
+        fun newInstance() = IndexConfirmFragment()
+
+        @JvmStatic
+        fun newInstance(message: String): IndexConfirmFragment {
+            val args = Bundle()
+            args.putString(ARG_ERROR_STRING, message)
+
+            val icf = IndexConfirmFragment()
+            icf.arguments = args
+            return icf
+        }
     }
+
+    private var indexActivity: IndexActivity? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -42,17 +53,13 @@ class IndexConfirmFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_index_confirm, container, false)
         val button = view.findViewById<Button>(R.id.b_index)
         button.setOnClickListener { indexActivity?.confirm() }
-        return view
-    }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @return A new instance of fragment IndexConfirmFragment.
-         */
-        @JvmStatic
-        fun newInstance() = IndexConfirmFragment()
+        savedInstanceState ?: arguments ?.let { bundle ->
+            bundle.getString(ARG_ERROR_STRING)?.let { message ->
+                view.findViewById<TextView>(R.id.tv_error).text = message
+            }
+        }
+
+        return view
     }
 }

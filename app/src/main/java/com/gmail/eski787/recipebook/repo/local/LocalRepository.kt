@@ -1,7 +1,8 @@
-package com.gmail.eski787.recipebook.repo
+package com.gmail.eski787.recipebook.repo.local
 
-import android.net.Uri
 import com.gmail.eski787.recipebook.data.IndexedItem
+import com.gmail.eski787.recipebook.repo.RecipeRepository
+import com.gmail.eski787.recipebook.repo.Result
 
 class LocalRepository: RecipeRepository {
     override val name: String

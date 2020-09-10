@@ -3,11 +3,10 @@ package com.gmail.eski787.recipebook.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.gmail.eski787.recipebook.R
-import com.gmail.eski787.recipebook.ui.index.IndexConfirmFragment
-import com.gmail.eski787.recipebook.ui.index.IndexFragmentHolder
-import com.gmail.eski787.recipebook.ui.index.IndexListFragment
+import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
+import com.gmail.eski787.recipebook.ui.index.*
 
-class IndexActivity : AppCompatActivity(), IndexFragmentHolder {
+class IndexActivity : AppCompatActivity(), IndexConfirmInterface, IndexListInterface {
     companion object {
         const val TAG = "IndexActivity"
     }
@@ -15,16 +14,27 @@ class IndexActivity : AppCompatActivity(), IndexFragmentHolder {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.index_activity)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, IndexConfirmFragment.newInstance())
-                    .commitNow()
-        }
+        supportFragmentManager.beginTransaction()
+                .replace(R.id.container, IndexConfirmFragment.newInstance())
+                .commit()
     }
 
     override fun confirm() {
         supportFragmentManager.beginTransaction()
             .replace(R.id.container, IndexListFragment.newInstance())
-            .commitNow()
+            .commit()
+    }
+
+    override fun onClick(identifier: OpenRecipeIdentifier) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, IndexDetailFragment.newInstance(identifier))
+            .addToBackStack("details")
+            .commit()
+    }
+
+    override fun onError(message: String) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.container, IndexConfirmFragment.newInstance(message))
+            .commit()
     }
 }

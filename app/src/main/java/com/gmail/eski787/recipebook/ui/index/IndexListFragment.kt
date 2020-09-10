@@ -1,5 +1,6 @@
 package com.gmail.eski787.recipebook.ui.index
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,19 +10,30 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import com.gmail.eski787.recipebook.R
-import java.lang.Exception
+import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 
 /**
  * A fragment representing a list of Items.
  */
-class IndexListFragment : Fragment() {
+class IndexListFragment : Fragment(), IndexListInterface {
     companion object {
         const val TAG = "IndexListFragment"
 
         @JvmStatic
         fun newInstance() = IndexListFragment()
+    }
+
+    private var parent: IndexListInterface? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parent = context as IndexListInterface
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        parent = null
     }
 
     override fun onCreateView(
@@ -37,14 +49,14 @@ class IndexListFragment : Fragment() {
         if (view !is RecyclerView) throw RuntimeException("IndexListFragment was instantiated " +
                 "with the wrong view. Got $view")
 
-        val recyclerViewAdapter = IndexedItemRecyclerViewAdapter()
+        val recyclerViewAdapter = IndexedItemRecyclerViewAdapter(this)
         val model: IndexedItemViewModel by viewModels()
         model.getIndexedItems().observe(viewLifecycleOwner, {
             recyclerViewAdapter.setItems(it)
         })
         model.getFailureStatus().observe(viewLifecycleOwner, {
             Log.e(TAG, "Could not collect index.", it)
-            // TODO Display error to GUI
+            parent?.onError(it.message?: "Unknown Error")
         })
 
         // Set the adapter
@@ -52,5 +64,13 @@ class IndexListFragment : Fragment() {
             layoutManager = LinearLayoutManager(context)
             adapter = recyclerViewAdapter
         }
+    }
+
+    override fun onClick(identifier: OpenRecipeIdentifier) {
+        parent?.onClick(identifier)
+    }
+
+    override fun onError(message: String) {
+        parent?.onError(message)
     }
 }

@@ -12,19 +12,19 @@ import java.util.*
 /**
  * [RecyclerView.Adapter] that can display a [IndexedItem].
  */
-class IndexedItemRecyclerViewAdapter() : RecyclerView.Adapter<IndexedItemRecyclerViewAdapter.ViewHolder>() {
+class IndexedItemRecyclerViewAdapter(val fragment: IndexListInterface) :
+    RecyclerView.Adapter<IndexedItemRecyclerViewAdapter.IndexedItemViewHolder>() {
+
     private var items: List<IndexedItem> = Collections.emptyList()
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): IndexedItemViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.fragment_index, parent, false)
-        return ViewHolder(view)
+        return IndexedItemViewHolder(view)
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val item = items[position]
-        holder.idView.text = position.toString()
-        holder.contentView.text = item.name
+    override fun onBindViewHolder(holder: IndexedItemViewHolder, position: Int) {
+        holder.setCurrentItem(position, items[position])
     }
 
     override fun getItemCount(): Int = items.size
@@ -34,12 +34,25 @@ class IndexedItemRecyclerViewAdapter() : RecyclerView.Adapter<IndexedItemRecycle
         notifyDataSetChanged()
     }
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val idView: TextView = view.findViewById(R.id.item_number)
-        val contentView: TextView = view.findViewById(R.id.content)
+    inner class IndexedItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        init {
+            view.setOnClickListener {
+                currentIndexedItem?.let { item -> fragment.onClick(item.identifier) }
+            }
+        }
+
+        private var currentIndexedItem: IndexedItem? = null
+        private val idView: TextView = view.findViewById(R.id.item_number)
+        private val contentView: TextView = view.findViewById(R.id.content)
 
         override fun toString(): String {
             return super.toString() + " '" + contentView.text + "'"
+        }
+
+        fun setCurrentItem(position: Int, item: IndexedItem) {
+            currentIndexedItem = item
+            idView.text = position.toString()
+            contentView.text = item.name
         }
     }
 }

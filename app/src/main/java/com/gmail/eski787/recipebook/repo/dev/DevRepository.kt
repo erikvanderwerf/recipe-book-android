@@ -27,6 +27,7 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
 
         (indexUrl.openConnection() as? HttpURLConnection)?.run {
             requestMethod = "GET"
+            connectTimeout = 5 * 1000
             setRequestProperty("Accept", "application/json")
             return try {
                 Result.Success(collectIndexItems(inputStream))

@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.gmail.eski787.recipebook.data.IndexedItem
-import com.gmail.eski787.recipebook.repo.AppRepositories
 import com.gmail.eski787.recipebook.repo.Result
+import com.gmail.eski787.recipebook.repo.RoomRepositoryAggregator
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,7 +24,7 @@ class IndexViewModel: ViewModel(), CoroutineScope {
 
     private fun collectIndex() {
         launch {
-            when (val index = AppRepositories.getCombinedRepositories().fetchIndex()) {
+            when (val index = RoomRepositoryAggregator.merge().fetchIndex()) {
                 is Result.Success -> mutableIndex.postValue(index.data)
                 is Result.Error -> failure.postValue(index.exception)
             }

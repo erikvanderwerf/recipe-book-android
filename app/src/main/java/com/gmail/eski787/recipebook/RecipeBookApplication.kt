@@ -2,7 +2,7 @@ package com.gmail.eski787.recipebook
 
 import android.app.Application
 import androidx.room.Room
-import com.gmail.eski787.recipebook.repo.AppRepositories
+import com.gmail.eski787.recipebook.repo.RoomRepositoryAggregator
 import com.gmail.eski787.recipebook.room.AppDatabase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -25,7 +25,7 @@ class RecipeBookApplication : Application(), CoroutineScope {
 
         // TODO Prepopulate with asset file
         launch {
-            AppRepositories.prepopulateRepoConfigs()
+            RoomRepositoryAggregator.prepopulateRepoConfigs()
         }
     }
 }

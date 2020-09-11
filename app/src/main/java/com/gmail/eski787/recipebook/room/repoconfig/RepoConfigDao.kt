@@ -1,4 +1,4 @@
-package com.gmail.eski787.recipebook.room
+package com.gmail.eski787.recipebook.room.repoconfig
 
 import androidx.room.Dao
 import androidx.room.Delete

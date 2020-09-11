@@ -5,10 +5,9 @@ import com.gmail.eski787.recipebook.repo.RecipeRepository
 import com.gmail.eski787.recipebook.repo.Result
 
 class LocalRepository: RecipeRepository {
-    override val name: String
-        get() = TODO("Not yet implemented")
+    override val name: String = "Local"
 
     override fun fetchIndex(): Result<List<IndexedItem>> {
-        TODO("Not yet implemented")
+        return Result.Success(emptyList())
     }
 }

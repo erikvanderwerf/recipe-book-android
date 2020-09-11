@@ -4,7 +4,6 @@ import android.net.Uri
 import android.util.JsonReader
 import android.util.Log
 import com.gmail.eski787.recipebook.data.IndexedItem
-import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 import com.gmail.eski787.recipebook.repo.RecipeRepository
 import com.gmail.eski787.recipebook.repo.Result
 import java.io.IOException
@@ -17,8 +16,6 @@ import java.net.URL
 class DevRepository(override val name: String, private val uri: Uri) : RecipeRepository {
     companion object {
         const val TAG = "DevRepository"
-
-        val EMULATOR_HOST = DevRepository("EmulatorHost", Uri.parse("http://10.0.2.2:5000"))
     }
 
     override fun fetchIndex(): Result<List<IndexedItem>> {

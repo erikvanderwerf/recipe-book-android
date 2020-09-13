@@ -3,15 +3,16 @@ package com.gmail.eski787.recipebook.ui.index
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.gmail.eski787.recipebook.R
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
+import com.gmail.eski787.recipebook.repo.Result
 
 /**
  * A fragment representing a list of Items.
@@ -50,13 +51,15 @@ class IndexListFragment : Fragment(), IndexListInterface {
                 "with the wrong view. Got $view")
 
         val recyclerViewAdapter = IndexRecyclerViewAdapter(this)
-        val model: IndexViewModel by viewModels()
-        model.getIndexedItems().observe(viewLifecycleOwner, {
-            recyclerViewAdapter.setItems(it)
-        })
-        model.getFailureStatus().observe(viewLifecycleOwner, {
-            Log.e(TAG, "Could not collect index.", it)
-            parent?.onError(it.message?: "Unknown Error")
+        val model by viewModels<IndexViewModel>()
+        model.collectIndex().observe(viewLifecycleOwner, {
+            when (it) {
+                is Result.Success -> recyclerViewAdapter.setItems(it.data)
+                is Result.Error -> {
+                    Log.e(TAG, "Could not collect index.", it.exception)
+                    parent?.onError(it.exception.message ?: "Unknown Error")
+                }
+            }
         })
 
         // Set the adapter
@@ -66,8 +69,8 @@ class IndexListFragment : Fragment(), IndexListInterface {
         }
     }
 
-    override fun onClick(identifier: OpenRecipeIdentifier) {
-        parent?.onClick(identifier)
+    override fun onClickIndex(identifier: OpenRecipeIdentifier) {
+        parent?.onClickIndex(identifier)
     }
 
     override fun onError(message: String) {

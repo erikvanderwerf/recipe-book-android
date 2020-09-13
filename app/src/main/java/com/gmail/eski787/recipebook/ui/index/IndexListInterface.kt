@@ -8,7 +8,7 @@ interface IndexListInterface {
      *
      * UI should show more details about selected item.
      */
-    fun onClick(identifier: OpenRecipeIdentifier)
+    fun onClickIndex(identifier: OpenRecipeIdentifier)
 
     /**
      * Called when an index operation resulted in an unrecoverable error.

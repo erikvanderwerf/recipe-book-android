@@ -10,6 +10,8 @@ import kotlinx.coroutines.launch
 
 class RecipeBookApplication : Application(), CoroutineScope {
     companion object {
+        const val TAG = "RecipeBookApplication"
+
         lateinit var roomDatabase: AppDatabase
     }
 

@@ -37,22 +37,26 @@ class IndexRecyclerViewAdapter(val fragment: IndexListInterface) :
     inner class IndexedItemViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         init {
             view.setOnClickListener {
-                currentIndexedItem?.let { item -> fragment.onClick(item.identifier) }
+                currentIndexedItem?.let { item -> fragment.onClickIndex(item.identity) }
             }
         }
 
         private var currentIndexedItem: IndexedItem? = null
-        private val idView: TextView = view.findViewById(R.id.item_number)
-        private val contentView: TextView = view.findViewById(R.id.content)
+        private val ordinalTextView = view.findViewById<TextView>(R.id.tv_ordinal)
+        private val titleTextView = view.findViewById<TextView>(R.id.tv_title)
+        private val identityTextView = view.findViewById<TextView>(R.id.tv_identity)
+        private val versionTextView = view.findViewById<TextView>(R.id.tv_version)
 
         override fun toString(): String {
-            return super.toString() + " '" + contentView.text + "'"
+            return super.toString() + " '" + titleTextView.text + "'"
         }
 
         fun setCurrentItem(position: Int, item: IndexedItem) {
             currentIndexedItem = item
-            idView.text = position.toString()
-            contentView.text = item.name
+            ordinalTextView.text = position.toString()
+            titleTextView.text = item.name
+            identityTextView.text = item.identity.dot()
+            versionTextView.text = item.version
         }
     }
 }

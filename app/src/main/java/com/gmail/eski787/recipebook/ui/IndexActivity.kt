@@ -1,7 +1,7 @@
 package com.gmail.eski787.recipebook.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.gmail.eski787.recipebook.R
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 import com.gmail.eski787.recipebook.ui.index.*
@@ -25,9 +25,9 @@ class IndexActivity : AppCompatActivity(), IndexConfirmInterface, IndexListInter
             .commit()
     }
 
-    override fun onClick(identifier: OpenRecipeIdentifier) {
+    override fun onClickIndex(identifier: OpenRecipeIdentifier) {
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, IndexedItemDetailFragment.newInstance(identifier))
+            .replace(R.id.container, MetadataFragment.newInstance(identifier))
             .addToBackStack("details")
             .commit()
     }

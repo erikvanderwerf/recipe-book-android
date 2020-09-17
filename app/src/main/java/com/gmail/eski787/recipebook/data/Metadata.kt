@@ -6,4 +6,11 @@ interface Metadata {
     val identity: OpenRecipeIdentifier
     val version: String
     val lang: String
+    val source: List<Source>
+
+    interface Source {
+        val type: String
+        val url: String
+        val author: String
+    }
 }

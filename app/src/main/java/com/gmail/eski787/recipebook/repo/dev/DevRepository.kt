@@ -7,7 +7,6 @@ import com.gmail.eski787.recipebook.data.IndexedItem
 import com.gmail.eski787.recipebook.data.Metadata
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 import com.gmail.eski787.recipebook.repo.HttpException
-import com.gmail.eski787.recipebook.repo.ItemNotFoundException
 import com.gmail.eski787.recipebook.repo.RecipeRepository
 import com.gmail.eski787.recipebook.repo.Result
 import java.io.InputStreamReader
@@ -23,9 +22,14 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
     override fun getIndex(): Result<List<IndexedItem>> {
         Log.d(TAG, "Fetch index for $name")
         val indexUrl = URL(uri.buildUpon().appendEncodedPath("index").build().toString())
-        val reader = getJsonReaderFrom(indexUrl)
         val itemsList = ArrayList<IndexedItem>()
 
+        val reader: JsonReader
+        try {
+            reader = getJsonReaderFrom(indexUrl)
+        } catch (e: HttpException) {
+            return Result.Error(e)
+        }
         reader.beginArray()
         while (reader.hasNext()) {
             reader.beginObject()
@@ -55,28 +59,47 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
             uri.buildUpon().appendEncodedPath("meta")
                 .appendEncodedPath(identifier.path()).build().toString()
         )
-        val reader = try {
-            getJsonReaderFrom(metaUrl)
-        } catch (e: Exception) {
-            throw ItemNotFoundException(identifier)
+        val reader: JsonReader
+        try {
+            reader = getJsonReaderFrom(metaUrl)
+        } catch (e: HttpException) {
+            return Result.Error(e)
         }
         val metaFac = DevMetadata.Factory()
         reader.beginObject()
         while (reader.hasNext()) {
-            val nn = reader.nextName();
-            val ns = reader.nextString()
-            when (nn) {
-                "name" -> metaFac.name = ns
-                "type" -> metaFac.type = ns
-                "identity" -> metaFac.identity = OpenRecipeIdentifier.fromDot(ns)
-                "ver" -> metaFac.version = ns
-                "lang" -> metaFac.lang = ns
-                else -> throw RuntimeException("Invalid Metadata Parameter")
+            when (val nn = reader.nextName()) {
+                "id" -> metaFac.identity = OpenRecipeIdentifier.fromDot(reader.nextString())
+                "ver" -> metaFac.version = reader.nextString()
+                "name" -> metaFac.name = reader.nextString()
+                "type" -> metaFac.type = reader.nextString()
+                "lang" -> metaFac.lang = reader.nextString()
+                "source" -> metaFac.source = readSource(reader)
+                else -> throw RuntimeException("Invalid Metadata Parameter: $nn")
             }
         }
         reader.endObject()
         reader.close()
         return Result.Success(metaFac.build())
+    }
+
+    private fun readSource(reader: JsonReader): List<Metadata.Source> {
+        val sources = ArrayList<Metadata.Source>()
+        reader.beginArray()
+        while (reader.hasNext()) {
+            val srcFac = DevSource.Factory()
+            reader.beginObject()
+            when (val nn = reader.nextName()) {
+                "type" -> srcFac.type = reader.nextString()
+                "url" -> srcFac.url = reader.nextString()
+                "author" -> srcFac.author = reader.nextString()
+                else -> throw RuntimeException("Invalid Source Parameter: $nn")
+            }
+            reader.endObject()
+            sources.add(srcFac.build())
+        }
+        reader.endArray()
+        return sources
     }
 
     private fun getJsonReaderFrom(url: URL): JsonReader =
@@ -86,7 +109,7 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
             setRequestProperty("Accept", "application/json")
             when (responseCode) {
                 200 -> JsonReader(InputStreamReader(inputStream))
-                else -> throw HttpException(responseCode)
+                else -> throw HttpException(responseCode, errorStream)
             }
         }
 }

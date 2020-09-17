@@ -9,6 +9,7 @@ class DevMetadata(
     override val identity: OpenRecipeIdentifier,
     override val version: String,
     override val lang: String,
+    override val source: List<Metadata.Source>,
 ) : Metadata {
     class Factory {
         lateinit var name: String
@@ -16,6 +17,7 @@ class DevMetadata(
         lateinit var identity: OpenRecipeIdentifier
         lateinit var version: String
         lateinit var lang: String
-        fun build(): DevMetadata = DevMetadata(name, type, identity, version, lang)
+        lateinit var source: List<Metadata.Source>
+        fun build() = DevMetadata(name, type, identity, version, lang, source)
     }
 }

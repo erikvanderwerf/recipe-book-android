@@ -6,9 +6,10 @@ import android.util.Log
 import com.gmail.eski787.recipebook.data.IndexedItem
 import com.gmail.eski787.recipebook.data.Metadata
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
-import com.gmail.eski787.recipebook.repo.HttpException
+import com.gmail.eski787.recipebook.repo.HttpCodeException
 import com.gmail.eski787.recipebook.repo.RecipeRepository
 import com.gmail.eski787.recipebook.repo.Result
+import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
@@ -27,8 +28,11 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         val reader: JsonReader
         try {
             reader = getJsonReaderFrom(indexUrl)
-        } catch (e: HttpException) {
-            return Result.Error(e)
+        } catch (e: Exception) {
+            when (e) {
+                is HttpCodeException, is IOException -> return Result.Error(e)
+                else -> throw e
+            }
         }
         reader.beginArray()
         while (reader.hasNext()) {
@@ -62,8 +66,11 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         val reader: JsonReader
         try {
             reader = getJsonReaderFrom(metaUrl)
-        } catch (e: HttpException) {
-            return Result.Error(e)
+        } catch (e: Exception) {
+            when (e) {
+                is HttpCodeException, is IOException -> return Result.Error(e)
+                else -> throw e
+            }
         }
         val metaFac = DevMetadata.Factory()
         reader.beginObject()
@@ -89,11 +96,13 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         while (reader.hasNext()) {
             val srcFac = DevSource.Factory()
             reader.beginObject()
-            when (val nn = reader.nextName()) {
-                "type" -> srcFac.type = reader.nextString()
-                "url" -> srcFac.url = reader.nextString()
-                "author" -> srcFac.author = reader.nextString()
-                else -> throw RuntimeException("Invalid Source Parameter: $nn")
+            while (reader.hasNext()) {
+                when (val nn = reader.nextName()) {
+                    "type" -> srcFac.type = reader.nextString()
+                    "url" -> srcFac.url = reader.nextString()
+                    "author" -> srcFac.author = reader.nextString()
+                    else -> throw RuntimeException("Invalid Source Parameter: $nn")
+                }
             }
             reader.endObject()
             sources.add(srcFac.build())
@@ -109,7 +118,7 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
             setRequestProperty("Accept", "application/json")
             when (responseCode) {
                 200 -> JsonReader(InputStreamReader(inputStream))
-                else -> throw HttpException(responseCode, errorStream)
+                else -> throw HttpCodeException(responseCode, errorStream)
             }
         }
 }

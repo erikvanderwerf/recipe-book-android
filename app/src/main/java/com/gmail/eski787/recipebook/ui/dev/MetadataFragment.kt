@@ -1,4 +1,4 @@
-package com.gmail.eski787.recipebook.ui.index
+package com.gmail.eski787.recipebook.ui.dev
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -31,7 +31,7 @@ class MetadataFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View? {
-        return inflater.inflate(R.layout.index_detail_fragment, container, false)
+        return inflater.inflate(R.layout.metadata_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.gmail.eski787.recipebook.ui.index
+package com.gmail.eski787.recipebook.ui.dev
 
 import android.content.Context
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -54,6 +55,8 @@ class IndexListFragment : Fragment(), IndexListInterface {
         val model by viewModels<IndexViewModel>()
         model.collectIndex().observe(viewLifecycleOwner, {
             when (it) {
+                is Result.Loading -> Toast.makeText(this.context, "Loading...", Toast.LENGTH_SHORT)
+                    .show()
                 is Result.Success -> recyclerViewAdapter.setItems(it.data)
                 is Result.Error -> {
                     Log.e(TAG, "Could not collect index.", it.exception)

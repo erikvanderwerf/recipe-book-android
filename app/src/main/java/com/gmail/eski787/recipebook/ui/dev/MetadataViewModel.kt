@@ -1,4 +1,4 @@
-package com.gmail.eski787.recipebook.ui.index
+package com.gmail.eski787.recipebook.ui.dev
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel

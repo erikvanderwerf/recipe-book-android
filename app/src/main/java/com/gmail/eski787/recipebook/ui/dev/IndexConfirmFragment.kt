@@ -1,15 +1,15 @@
-package com.gmail.eski787.recipebook.ui.index
+package com.gmail.eski787.recipebook.ui.dev
 
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import com.gmail.eski787.recipebook.ui.IndexActivity
+import androidx.fragment.app.Fragment
 import com.gmail.eski787.recipebook.R
+import com.gmail.eski787.recipebook.ui.DevActivity
 
 
 /**
@@ -36,12 +36,12 @@ class IndexConfirmFragment : Fragment() {
         }
     }
 
-    private var indexActivity: IndexActivity? = null
+    private var devActivity: DevActivity? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (context is IndexActivity) {
-            indexActivity = context
+        if (context is DevActivity) {
+            devActivity = context
         }
     }
 
@@ -52,7 +52,7 @@ class IndexConfirmFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_index_confirm, container, false)
         val button = view.findViewById<Button>(R.id.b_index)
-        button.setOnClickListener { indexActivity?.confirm() }
+        button.setOnClickListener { devActivity?.confirm() }
 
         savedInstanceState ?: arguments ?.let { bundle ->
             bundle.getString(ARG_ERROR_STRING)?.let { message ->

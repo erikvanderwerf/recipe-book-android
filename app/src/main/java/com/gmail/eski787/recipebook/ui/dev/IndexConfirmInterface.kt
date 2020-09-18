@@ -1,4 +1,4 @@
-package com.gmail.eski787.recipebook.ui.index
+package com.gmail.eski787.recipebook.ui.dev
 
 interface IndexConfirmInterface {
     /**

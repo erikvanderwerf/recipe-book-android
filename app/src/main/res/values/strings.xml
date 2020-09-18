@@ -2,4 +2,8 @@
     <string name="app_name">Recipe Book</string>
     <string name="index_confirm">Perform Index</string>
     <string name="index_help">An index operation may take some time. Continue?</string>
+    <string name="type">Type</string>
+    <string name="version">Version</string>
+    <string name="language">Language</string>
+    <string name="identity">Identity</string>
 </resources>

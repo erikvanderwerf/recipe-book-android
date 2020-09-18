@@ -38,8 +38,8 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         reader.beginArray()
         while (reader.hasNext()) {
             reader.beginObject()
-            var id: String? = null;
-            var name: String? = null;
+            var id: String? = null
+            var name: String? = null
             var version: String? = null
             while (reader.hasNext()) {
                 when (reader.nextName()) {

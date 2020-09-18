@@ -63,7 +63,7 @@
             android:layout_height="match_parent">
 
             <TextView
-                android:id="@+id/lbl_ident"
+                android:id="@+id/lbl_identity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
@@ -76,7 +76,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="24dp"
-                tools:text="ident" />
+                tools:text="identity" />
 
         </TableRow>
 

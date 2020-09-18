@@ -2,6 +2,7 @@ package com.gmail.eski787.recipebook.repo
 
 import android.util.Log
 import com.gmail.eski787.recipebook.data.IndexedItem
+import com.gmail.eski787.recipebook.data.Item
 import com.gmail.eski787.recipebook.data.Metadata
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 
@@ -31,5 +32,9 @@ class MergedRecipeRepository(private val repositories: List<RecipeRepository>) :
             }
         }
         return ProgressResult.Error(ItemNotFoundException(identifier))
+    }
+
+    override fun getItem(identifier: OpenRecipeIdentifier): ProgressResult<Item> {
+        TODO("Not yet implemented")
     }
 }

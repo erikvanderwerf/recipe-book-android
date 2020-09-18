@@ -1,6 +1,7 @@
 package com.gmail.eski787.recipebook.repo.local
 
 import com.gmail.eski787.recipebook.data.IndexedItem
+import com.gmail.eski787.recipebook.data.Item
 import com.gmail.eski787.recipebook.data.Metadata
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 import com.gmail.eski787.recipebook.repo.ProgressResult
@@ -14,6 +15,10 @@ object LocalRepository : RecipeRepository {
     }
 
     override fun getMetadataFor(identifier: OpenRecipeIdentifier): ProgressResult<Metadata> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getItem(identifier: OpenRecipeIdentifier): ProgressResult<Item> {
         TODO("Not yet implemented")
     }
 }

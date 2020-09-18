@@ -11,7 +11,7 @@ class OpenRecipeIdentifier private constructor(private val parts: Array<String>)
         }
     }
 
-    override fun toString(): String = dot();
+    override fun toString(): String = dot()
 
     fun dot(): String = parts.joinToString(".")
 

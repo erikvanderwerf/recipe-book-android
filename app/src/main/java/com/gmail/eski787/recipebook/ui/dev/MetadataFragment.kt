@@ -1,16 +1,18 @@
 package com.gmail.eski787.recipebook.ui.dev
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import com.gmail.eski787.recipebook.R
 import com.gmail.eski787.recipebook.data.Metadata
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
-import com.gmail.eski787.recipebook.repo.Result
+import com.gmail.eski787.recipebook.repo.ProgressResult
 
 class MetadataFragment : Fragment() {
     companion object {
@@ -27,6 +29,19 @@ class MetadataFragment : Fragment() {
         }
     }
 
+    private lateinit var identifier: OpenRecipeIdentifier
+    private var parent: MetadataInterface? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        parent = context as MetadataInterface
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        parent = null
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
@@ -38,17 +53,21 @@ class MetadataFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val model by viewModels<MetadataViewModel>()
-        arguments?.also { arg ->
-            arg.getString(ARG_IDENTIFIER)?.let { it ->
-                model.collectMetadataFor(OpenRecipeIdentifier.fromDot(it))
-                    .observe(viewLifecycleOwner, {
-                        when (it) {
-                            is Result.Loading -> displayLoading(it.status)
-                            is Result.Success -> displayMetadata(it.data)
-                            is Result.Error -> displayError(it.exception)
-                        }
-                    })
+        arguments?.let { arg ->
+            arg.getString(ARG_IDENTIFIER)?.let { id ->
+                identifier = OpenRecipeIdentifier.fromDot(id)
+                model.collectMetadataFor(identifier).observe(viewLifecycleOwner, { result ->
+                    when (result) {
+                        is ProgressResult.Loading -> displayLoading(result.status)
+                        is ProgressResult.Success -> displayMetadata(result.data)
+                        is ProgressResult.Error -> displayError(result.exception)
+                    }
+                })
             }
+        }
+
+        with(view.findViewById<Button>(R.id.b_download_view)) {
+            setOnClickListener { this@MetadataFragment.parent?.onDetailsFor(identifier) }
         }
     }
 
@@ -67,6 +86,7 @@ class MetadataFragment : Fragment() {
             it.findViewById<TextView>(R.id.tv_identity).text = data.identity.dot()
             it.findViewById<TextView>(R.id.tv_version).text = data.version
             it.findViewById<TextView>(R.id.tv_lang).text = data.lang
+            it.findViewById<Button>(R.id.b_download_view).visibility = View.VISIBLE
         }
     }
 

@@ -4,11 +4,12 @@ import android.net.Uri
 import android.util.JsonReader
 import android.util.Log
 import com.gmail.eski787.recipebook.data.IndexedItem
+import com.gmail.eski787.recipebook.data.Item
 import com.gmail.eski787.recipebook.data.Metadata
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 import com.gmail.eski787.recipebook.repo.HttpCodeException
+import com.gmail.eski787.recipebook.repo.ProgressResult
 import com.gmail.eski787.recipebook.repo.RecipeRepository
-import com.gmail.eski787.recipebook.repo.Result
 import java.io.IOException
 import java.io.InputStreamReader
 import java.net.HttpURLConnection
@@ -20,7 +21,7 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         const val TAG = "DevRepository"
     }
 
-    override fun getIndex(): Result<List<IndexedItem>> {
+    override fun getIndex(): ProgressResult<List<IndexedItem>> {
         Log.d(TAG, "Fetch index for $name")
         val indexUrl = URL(uri.buildUpon().appendEncodedPath("index").build().toString())
         val itemsList = ArrayList<IndexedItem>()
@@ -30,7 +31,7 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
             reader = getJsonReaderFrom(indexUrl)
         } catch (e: Exception) {
             when (e) {
-                is HttpCodeException, is IOException -> return Result.Error(e)
+                is HttpCodeException, is IOException -> return ProgressResult.Error(e)
                 else -> throw e
             }
         }
@@ -54,10 +55,10 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         }
         reader.endArray()
         reader.close()
-        return Result.Success(itemsList)
+        return ProgressResult.Success(itemsList)
     }
 
-    override fun getMetadataFor(identifier: OpenRecipeIdentifier): Result<Metadata> {
+    override fun getMetadataFor(identifier: OpenRecipeIdentifier): ProgressResult<Metadata> {
         Log.d(TAG, "Fetch metadata for $identifier")
         val metaUrl = URL(
             uri.buildUpon().appendEncodedPath("meta")
@@ -68,7 +69,7 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
             reader = getJsonReaderFrom(metaUrl)
         } catch (e: Exception) {
             when (e) {
-                is HttpCodeException, is IOException -> return Result.Error(e)
+                is HttpCodeException, is IOException -> return ProgressResult.Error(e)
                 else -> throw e
             }
         }
@@ -87,7 +88,11 @@ class DevRepository(override val name: String, private val uri: Uri) : RecipeRep
         }
         reader.endObject()
         reader.close()
-        return Result.Success(metaFac.build())
+        return ProgressResult.Success(metaFac.build())
+    }
+
+    override fun getItem(identifier: OpenRecipeIdentifier): ProgressResult<Item> {
+        TODO("Not yet implemented")
     }
 
     private fun readSource(reader: JsonReader): List<Metadata.Source> {

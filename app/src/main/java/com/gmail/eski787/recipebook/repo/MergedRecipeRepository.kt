@@ -12,24 +12,24 @@ class MergedRecipeRepository(private val repositories: List<RecipeRepository>) :
 
     override val name = "merged"
 
-    override fun getIndex(): Result<List<IndexedItem>> {
+    override fun getIndex(): ProgressResult<List<IndexedItem>> {
         val combined = ArrayList<IndexedItem>()
         for (repo in repositories) {
             when (val result = repo.getIndex()) {
-                is Result.Success -> combined.addAll(result.data)
-                is Result.Error -> return result
+                is ProgressResult.Success -> combined.addAll(result.data)
+                is ProgressResult.Error -> return result
             }
         }
-        return Result.Success(combined)
+        return ProgressResult.Success(combined)
     }
 
-    override fun getMetadataFor(identifier: OpenRecipeIdentifier): Result<Metadata> {
+    override fun getMetadataFor(identifier: OpenRecipeIdentifier): ProgressResult<Metadata> {
         for (repo in repositories) {
             when (val result = repo.getMetadataFor(identifier)) {
-                is Result.Success -> return result
-                is Result.Error -> Log.i(TAG, "repo returned error: ${result.exception}")
+                is ProgressResult.Success -> return result
+                is ProgressResult.Error -> Log.i(TAG, "repo returned error: ${result.exception}")
             }
         }
-        return Result.Error(ItemNotFoundException(identifier))
+        return ProgressResult.Error(ItemNotFoundException(identifier))
     }
 }

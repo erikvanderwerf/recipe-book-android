@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.gmail.eski787.recipebook.R
 import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
-import com.gmail.eski787.recipebook.repo.Result
+import com.gmail.eski787.recipebook.repo.ProgressResult
 
 /**
  * A fragment representing a list of Items.
@@ -55,10 +55,12 @@ class IndexListFragment : Fragment(), IndexListInterface {
         val model by viewModels<IndexViewModel>()
         model.collectIndex().observe(viewLifecycleOwner, {
             when (it) {
-                is Result.Loading -> Toast.makeText(this.context, "Loading...", Toast.LENGTH_SHORT)
+                is ProgressResult.Loading -> Toast.makeText(this.context,
+                    "Loading...",
+                    Toast.LENGTH_SHORT)
                     .show()
-                is Result.Success -> recyclerViewAdapter.setItems(it.data)
-                is Result.Error -> {
+                is ProgressResult.Success -> recyclerViewAdapter.setItems(it.data)
+                is ProgressResult.Error -> {
                     Log.e(TAG, "Could not collect index.", it.exception)
                     parent?.onError(it.exception.message ?: "Unknown Error")
                 }

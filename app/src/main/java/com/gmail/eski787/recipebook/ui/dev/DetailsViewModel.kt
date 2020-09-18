@@ -3,16 +3,17 @@ package com.gmail.eski787.recipebook.ui.dev
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.liveData
-import com.gmail.eski787.recipebook.data.IndexedItem
+import com.gmail.eski787.recipebook.data.Item
+import com.gmail.eski787.recipebook.data.OpenRecipeIdentifier
 import com.gmail.eski787.recipebook.repo.ProgressResult
 import com.gmail.eski787.recipebook.repo.RoomRepositoryAggregator
 import kotlinx.coroutines.Dispatchers
 
-class IndexViewModel : ViewModel() {
-    fun collectIndex(): LiveData<ProgressResult<List<IndexedItem>>> {
+class DetailsViewModel : ViewModel() {
+    fun collectDetailsFor(identifier: OpenRecipeIdentifier): LiveData<ProgressResult<Item>> {
         return liveData(context = Dispatchers.IO) {
             emit(ProgressResult.Loading("Loading..."))
-            emit(RoomRepositoryAggregator.merge().getIndex())
+            emit(RoomRepositoryAggregator.merge().getItem(identifier))
         }
     }
 }
